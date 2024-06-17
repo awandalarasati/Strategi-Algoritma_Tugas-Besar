@@ -1,0 +1,75 @@
+Function findNearestCity(currentCity: integer, distanceMatrix: const vector of vector of int, visited: const vector of boolean -> integer
+kamus
+	n, nearestCity, minDistance, i: integer
+algoritma
+	n <- distanceMatrix.size()
+	nearestCity <- -1
+	minDistance <- numeric_limits vector of int max()
+
+	for (i from 0 to n-1) do
+		if (visited[i] == FALSE and distanceMatrix[currentCity][i]) < minDistance then
+			minDistance <- distanceMatrix[currentCity][i]
+			nearestCity <- i
+		endif
+	endfor
+	-> nearestCity
+endfunction
+
+program Greedy
+kamus
+	numCities, i, j, currentCity, totalCost, nextCity, city: integer
+	cityNames(numCities): vector of string
+	bestPath: vector of integer
+	visited(numCities, false): vector of bool
+	distanceMatrix(numCities, numCities: vector of integer): vector of vector of int
+algoritma
+	output("-----IMPLEMENTASI METODE GREEDY-----")
+
+	output("Masukkan jumlah kecamatan:")
+	input(numCities)
+
+	output("Masukkan nama-nama kecamatan:")
+	for (i from 0 to numCities -1) do
+		input(cityNames[i])
+	endfor
+
+	output("Masukkan matriks jarak antar kecamatan:")
+	for (i from 0 to numCities -1) do
+		for (j from 0 to numCities -1) do
+			input(distanceMatrix[i][j])
+		endfor
+	endfor
+
+	currentCity <- 0
+	bestPath.push_back(currentCity)
+	totalCost <- 0
+
+	//Algoritma Greedy untuk TSP
+	for (i from 1 to numCities -1) do
+		nextCity <- findNearestCity(currentCity, distanceMatrix, visited)
+		if (nextCity NOT -1) then
+			bestPath.push_back(nextCity)
+			totalCost <- totalCost + distanceMatrix[currentCity][nextCity]
+			currentCity <- nextCity
+			visited[currentCity] <- true
+		endif
+	endfor
+
+	//Kembali ke kota awal untuk menyelesaikan siklus
+	totalCost <- totalCost + distanceMatrix[currentCity][nextCity]
+	bestPath.push_back(bestPath[0])
+
+	//Output jalur terbaik
+	output("Jalur terbaik:")
+	for (city:bestPath) do
+		output(cityNames[city] << " ")
+	endfor
+
+	//Output biaya yang dibutuhkan
+	output("Biaya yang dibutuhkan: ") << totalCost
+
+	//Output kelas kompleksitas waktu
+	output("Kompleksitas waktu: O(n^2)")
+
+	-> 0
+endprogram

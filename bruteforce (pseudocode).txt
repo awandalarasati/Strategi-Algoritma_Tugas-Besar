@@ -1,0 +1,98 @@
+type TSP <
+    numCities: integer              // Jumlah kecamatan
+    cityNames: vector of string    // Nama-nama kecamatan
+    distanceMatrix: vector of vector of integer // Matriks jarak antarkecamatan
+>
+
+function calculateTourCost(tour: const ector of int, tsp: const TSP) -> integer
+kamus
+    cost, i, from, to: integer
+algoritma
+    cost <- 0
+    for (i from 0 to tsp.numCities-1) do
+        from <- tour[i]
+        to <- tour[(i + 1) mod tsp.numCities]
+        cost += tsp.distanceMatrix[from][to]
+    endfor
+    return cost
+endfunction
+
+// Fungsi untuk mencetak jalur terbaik
+procedure printBestTour(input/output bestTour: const ector of int, tsp: const TSP)
+kamus
+    i: integer
+algoritma
+    output ("Jalur terbaik: ")
+    for (i from 0 to tsp.numCities-1) do
+        output (tsp.cityNames[bestTour[i]])
+        if (i < tsp.numCities-1 ) then
+            output (" ")
+        endif
+    endfor
+    output (" ", tsp.cityNames[bestTour[0]])
+    output ()
+endprocedure
+
+// Fungsi untuk menyelesaikan dengan brute force
+procedure solveTSPBruteForce(input/output tsp: TSP)
+kamus
+    i, currentCost, minCost: integer
+    tour(tsp.numCities): vector of integer;
+    bestTour(tsp.numCities):vector of integer;
+algoritma
+    minCost <- INT_MAX
+    // Inisialisasi tur awal
+    for (i from 0 to tsp.numCities-1) do
+        tour[i] <- i
+    endfor
+
+    // Permutasi semua kemungkinan tur
+    do
+        currentCost <- calculateTourCost(tour, tsp)
+        if (currentCost < minCost) then
+            minCost <- currentCost
+            bestTour <- tour
+        endif
+    while (next_permutation(tour.begin() + 1, tour.end()))
+
+    // Output hasil
+    printBestTour(bestTour, tsp)
+    output (Biaya yang dibutuhkan: ", minCost)
+endprocedure
+
+
+Program BruteForce
+Kamus
+    tsp : TSP
+
+Algoritma
+    Output ("-----IMPLEMENTASI METODE BRUTE FORCE-----")
+
+    // Input jumlah kecamatan
+    Output ("Masukkan jumlah kecamatan: ")
+    Input (tsp.numCities) //declare varible untuk jumlah kecamatan
+
+    // Input nama kecamatan
+    Resize tsp.cityNames to tsp.numCities
+    Output ("Masukkan nama-nama kecamatan:")
+    For i from 0 to tsp.numCities - 1 do
+        Input (tsp.cityNames[i])
+    Endfor
+
+    // Input distance matrix
+    Resize tsp.distanceMatrix to tsp.numCities x tsp.numCities
+    Output ("Masukkan matriks jarak antar kecamatan:")
+    For i from 0 to tsp.numCities - 1 do
+        For j from 0 to tsp.numCities - 1 do
+            Input (tsp.distanceMatrix[i][j])
+        Endfor
+    Endfor
+
+    // Solve TSP using brute force method
+    solveTSPBruteForce(tsp)
+
+    // Output time complexity class
+    Output ("Kompleksitas waktu: O(n!)")
+
+    Return 0
+Endprogram
